@@ -8,7 +8,8 @@ const LeftoverFoodApp = () => {
     location: '',
     category: '',
     freshness: '',
-    priceRange: ''
+    priceRange: '',
+    halal: ''
   });
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -33,7 +34,9 @@ const LeftoverFoodApp = () => {
       image: '🥖',
       available: true,
       description: 'Assorted breads and pastries',
-      pickupTimes: ['5:00 PM', '6:00 PM', '7:00 PM']
+      pickupTimes: ['5:00 PM', '6:00 PM', '7:00 PM'],
+      halal: true,
+      expirationDate: 'Jan 14, 2026'
     },
     {
       id: 2,
@@ -47,7 +50,9 @@ const LeftoverFoodApp = () => {
       image: '🥗',
       available: true,
       description: 'Mixed seasonal vegetables',
-      pickupTimes: ['4:00 PM', '5:00 PM', '6:00 PM']
+      pickupTimes: ['4:00 PM', '5:00 PM', '6:00 PM'],
+      halal: true,
+      expirationDate: 'Jan 15, 2026'
     },
     {
       id: 3,
@@ -61,7 +66,9 @@ const LeftoverFoodApp = () => {
       image: '🍕',
       available: true,
       description: '4 assorted pizza slices',
-      pickupTimes: ['8:00 PM', '9:00 PM']
+      pickupTimes: ['8:00 PM', '9:00 PM'],
+      halal: false,
+      expirationDate: 'Jan 14, 2026'
     },
     {
       id: 4,
@@ -75,7 +82,9 @@ const LeftoverFoodApp = () => {
       image: '🍎',
       available: true,
       description: 'Seasonal fruit assortment',
-      pickupTimes: ['3:00 PM', '4:00 PM', '5:00 PM']
+      pickupTimes: ['3:00 PM', '4:00 PM', '5:00 PM'],
+      halal: true,
+      expirationDate: 'Jan 16, 2026'
     }
   ]);
 
@@ -86,12 +95,15 @@ const LeftoverFoodApp = () => {
     const matchesLocation = !filters.location || item.location === filters.location;
     const matchesCategory = !filters.category || item.category === filters.category;
     const matchesFreshness = !filters.freshness || item.freshness === filters.freshness;
+    const matchesHalal = !filters.halal || 
+                        (filters.halal === 'halal' && item.halal) ||
+                        (filters.halal === 'non-halal' && !item.halal);
     const matchesPrice = !filters.priceRange || 
                         (filters.priceRange === 'under5' && item.price < 22) ||
                         (filters.priceRange === '5to10' && item.price >= 22 && item.price <= 44) ||
                         (filters.priceRange === 'over10' && item.price > 44);
     
-    return matchesSearch && matchesLocation && matchesCategory && matchesFreshness && matchesPrice;
+    return matchesSearch && matchesLocation && matchesCategory && matchesFreshness && matchesHalal && matchesPrice;
   });
 
   const addToCart = (item) => {
@@ -199,6 +211,16 @@ const LeftoverFoodApp = () => {
 
           <select
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            value={filters.halal}
+            onChange={(e) => setFilters({...filters, halal: e.target.value})}
+          >
+            <option value="">All Food</option>
+            <option value="halal">Halal Only</option>
+            <option value="non-halal">Non-Halal</option>
+          </select>
+
+          <select
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm col-span-2"
             value={filters.priceRange}
             onChange={(e) => setFilters({...filters, priceRange: e.target.value})}
           >
@@ -217,9 +239,16 @@ const LeftoverFoodApp = () => {
             <div className="p-4">
               <div className="flex justify-between items-start mb-2">
                 <div className="text-4xl">{item.image}</div>
-                <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                  {item.freshness}
-                </span>
+                <div className="flex flex-col gap-1 items-end">
+                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                    {item.freshness}
+                  </span>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    item.halal ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700'
+                  }`}>
+                    {item.halal ? '✓ Halal' : 'Non-Halal'}
+                  </span>
+                </div>
               </div>
               <h3 className="font-bold text-lg mb-1">{item.name}</h3>
               <p className="text-sm text-gray-600 mb-2">{item.description}</p>
@@ -227,7 +256,11 @@ const LeftoverFoodApp = () => {
                 <MapPin size={14} />
                 <span>{item.merchant} • {item.location}</span>
               </div>
-              <div className="text-sm text-gray-500 mb-3">{item.category}</div>
+              <div className="text-sm text-gray-500 mb-1">{item.category}</div>
+              <div className="text-xs text-orange-600 mb-3 flex items-center gap-1">
+                <Clock size={12} />
+                <span>Expires: {item.expirationDate}</span>
+              </div>
               <div className="flex justify-between items-center">
                 <div>
                   <span className="text-2xl font-bold text-green-600">RM{item.price}</span>
