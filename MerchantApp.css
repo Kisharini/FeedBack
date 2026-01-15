@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  background: #0f0f0f;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #4caf50;
+}
+
+.logo {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+h2 {
+  color: #ff9800;
+}
+
+.card {
+  background: #1c1c1c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-radius: 5px;
+  border: none;
+}
+
+.primary {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.8rem;
+  background: #4caf50;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: white;
+}
